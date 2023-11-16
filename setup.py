@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'daypoem=src.daypoem:main',  # "daypoem" 是命令行工具的名称
+            'daypoem=daypoem.main:main',  # "daypoem" 是命令行工具的名称
         ],
-    },
+    }
 )

@@ -6,6 +6,7 @@ import json
 import typer
 import openai
 import requests
+import pkg_resources
 from pathlib import Path
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
@@ -19,6 +20,8 @@ first_day_str = os.getenv("FIRST_DAY", "2023-10-16")
 first_day = datetime.strptime(first_day_str, "%Y-%m-%d")
 base_dir_str = os.getenv("BASE_DIR", (Path.home() / "Downloads").as_posix())
 base_dir = Path(base_dir_str) / "AI 画诗"
+
+data_path = pkg_resources.resource_filename(__name__, 'data/poems.csv')
 
 summary_prompt = """我是一名男士，你是我的小红书文案撰写助手，对我提供的 json 数据格式的古诗词内容进行分析理解，最终会总结一句话分享，你需要把自己当做读者提出切题且值得思考的问题（也就是第一人称），尽量是非常简短和富有文采的一句话！同时生成一个以“AI画诗《{诗的题目}》开头的文案标题，小红书标题不能超过 20 个中文汉字，要求吸人眼球且符合小红书文案风格，如果可能的话一句话和标题中也配上贴切的 emoji，同时凝练出可以使用的话题关键词，比如#唐诗 #月亮 #思念 #爱情 ...；另外根据我提供的赏析内容，写一段贴合原赏析内容且富有文采和哲理的赏析。综上，整体输出的内容为 json 字符串本身就好，不要使用 markdown 语法，形如:
 {
@@ -111,10 +114,9 @@ def parse_poem_info(url):
 
 def get_poems() -> list:
 
-    filename = "data/poems.csv"
     poems = []
 
-    with open(filename, "r", encoding="utf-8") as csvfile:
+    with open(data_path, "r", encoding="utf-8") as csvfile:
         reader = csv.reader(csvfile)
         next(reader)  # 跳过标题行
         for row in reader:
@@ -221,8 +223,8 @@ def daypoem(
         days_offset = offset if offset >= min_days_offset else min_days_offset
         poem_date = datetime.today() + timedelta(days=days_offset)
 
-        date = date if date else poem_date.strftime("%Y%m%d")
-        dir_name = f'{date}《{poem_info["题目"]}》'
+        date_str = poem_date.strftime("%Y%m%d")
+        dir_name = f'{date_str}《{poem_info["题目"]}》'
         dir_path = base_dir / dir_name
         if not dir_path.exists():
             dir_path.mkdir()
