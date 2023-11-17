@@ -18,7 +18,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 first_day_str = os.getenv("FIRST_DAY", "2023-10-16")
 first_day = datetime.strptime(first_day_str, "%Y-%m-%d")
-base_dir_str = os.getenv("BASE_DIR", (Path.home() / "Downloads").as_posix())
+base_dir_str = os.getenv("BASE_DIR", (Path.home() / "Desktop").as_posix())
 base_dir = Path(base_dir_str) / "AI 画诗"
 
 data_path = pkg_resources.resource_filename(__name__, 'data/poems.csv')
