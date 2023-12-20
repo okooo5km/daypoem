@@ -70,7 +70,10 @@ def parse_poem_info(url):
     poem_data["诗句"] = zhengwen_div.find('div').text.strip()
 
     # Translation and Notes
-    yishang_div = soup.find('span', string="译文及注释").find_parent(
+    yiwen_div = soup.find('span', string="译文及注释")
+    if not yiwen_div:
+        yiwen_div = soup.find('span', string="注解及译文")
+    yishang_div = yiwen_div.find_parent(
         'div', {'class': 'contyishang'})
     yishang_ps = yishang_div.find_all('p')
     poem_data["译文"] = yishang_ps[0].text.strip().replace("译文", "")
@@ -80,6 +83,8 @@ def parse_poem_info(url):
 
     # Appreciation
     shangxi_span = soup.find('span', string="赏析")
+    if not shangxi_span:
+        shangxi_span = soup.find('span', string="评析")
     if shangxi_span:
         shangxi_div = shangxi_span.find_parent('div')
         shangxi_content = [p.text.strip()
