@@ -240,6 +240,12 @@ def daypoem(
         json.dump(poem_info, poem_info_file_path.open(
             "w", encoding="utf-8"), indent=4, ensure_ascii=False)
 
+        # 打开文件夹
+        os.system(f"open {dir_path.as_uri()}")
+        # poem_info echo 到系统剪切板
+        pretty_poem_info = json.dumps(poem_info, ensure_ascii=False, indent=4)
+        os.system(f"echo '{pretty_poem_info}' | pbcopy")
+
     else:
         print("Failed to fetch the webpage.")
 
