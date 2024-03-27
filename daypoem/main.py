@@ -73,13 +73,18 @@ def parse_poem_info(url):
     yiwen_div = soup.find('span', string="译文及注释")
     if not yiwen_div:
         yiwen_div = soup.find('span', string="注解及译文")
-    yishang_div = yiwen_div.find_parent(
-        'div', {'class': 'contyishang'})
-    yishang_ps = yishang_div.find_all('p')
-    poem_data["译文"] = yishang_ps[0].text.strip().replace("译文", "")
-    poem_data["注释"] = yishang_ps[1].text.strip()
-    if poem_data["注释"].endswith("展开阅读全文 ∨"):
-        poem_data["注释"] = poem_data["注释"][:poem_data["注释"].rfind("。")+1]
+
+    if not yiwen_div:
+        poem_data["译文"] = ""
+        poem_data["注释"] = ""
+    else:
+        yishang_div = yiwen_div.find_parent(
+            'div', {'class': 'contyishang'})
+        yishang_ps = yishang_div.find_all('p')
+        poem_data["译文"] = yishang_ps[0].text.strip().replace("译文", "")
+        poem_data["注释"] = yishang_ps[1].text.strip()
+        if poem_data["注释"].endswith("展开阅读全文 ∨"):
+            poem_data["注释"] = poem_data["注释"][:poem_data["注释"].rfind("。")+1]
 
     # Appreciation
     shangxi_span = soup.find('span', string="赏析")
