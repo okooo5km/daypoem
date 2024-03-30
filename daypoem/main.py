@@ -82,7 +82,10 @@ def parse_poem_info(url):
             'div', {'class': 'contyishang'})
         yishang_ps = yishang_div.find_all('p')
         poem_data["译文"] = yishang_ps[0].text.strip().replace("译文", "")
-        poem_data["注释"] = yishang_ps[1].text.strip()
+        if len(yishang_ps) > 1:
+            poem_data["注释"] = yishang_ps[1].text.strip()
+        else:
+            poem_data["注释"] = ""
         if poem_data["注释"].endswith("展开阅读全文 ∨"):
             poem_data["注释"] = poem_data["注释"][:poem_data["注释"].rfind("。")+1]
 
